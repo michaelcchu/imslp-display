@@ -27,14 +27,7 @@ loadingTask.promise.then(function(pdf) {
     var renderingTask = page.render(renderContext);
 
     renderingTask.promise.then(function() {
-        initializeCanvases(); 
-        const cursor = createCursor();
-        const lines = getHorizontalLines();
-        console.log(lines);
-        drawLines(lines);
-        const verticalLines = getVerticalLines();
-        console.log(verticalLines);
-        drawLines(verticalLines);
+        //initializeCanvases(); 
     });
   });
 });
@@ -45,100 +38,4 @@ function initializeCanvases() {
         canvas.width = document.getElementById('layer1').width;
         canvas.height = document.getElementById('layer1').height;
     }
-}
-
-function createCursor() {
-    const canvas = document.getElementById('layer2');
-    const context = canvas.getContext('2d');
-    context.globalAlpha = 0.5;
-    
-    function component(x, y, width, height, color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
-        this.clear = function() {
-            context.clearRect(this.x, this.y, this.width, this.height);
-        };
-        this.update = function() {
-            context.fillStyle = this.color;
-            context.fillRect(this.x, this.y, this.width, this.height);
-        };
-    }
-    
-    const cursor = new component(0, 0, 10, 50, "red");
-    cursor.update();
-    return cursor;
-}
-
-function getHorizontalLines() {
-    const canvas = document.getElementById('layer1');
-    const context = canvas.getContext('2d', {willReadFrequently: true});
-
-    const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imgData.data;
-    const lines = [];
-
-    let line = [];
-    for (let i = 0; 4*i < data.length; i++) {
-        if ((data[4*i] !== 255) || 
-        (data[4*i+1] !== 255) || 
-        (data[4*i+2] !== 255)) {
-            line.push(i);
-        } else {
-            if (line.length) {
-                lines.push(line);
-                line = [];
-            }
-        }
-    }
-
-    return lines;
-}
-
-function getVerticalLines() {
-    const canvas = document.getElementById('layer1');
-    const context = canvas.getContext('2d', {willReadFrequently: true});
-
-    const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imgData.data;
-    const lines = [];
-
-    let line = [];
-    for (let i = 0; 4*i < data.length; i++) {
-        if ((data[4*i] !== 255) || 
-        (data[4*i+1] !== 255) || 
-        (data[4*i+2] !== 255)) {
-            line.push(i);
-        } else {
-            if (line.length) {
-                lines.push(line);
-                line = [];
-            }
-        }
-    }
-
-    return lines;
-}
-
-function drawLines(lines) {
-    const canvas = document.getElementById('layer3');
-    const context = canvas.getContext('2d', {willReadFrequently: true});
-
-    const imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imgData.data;
-
-    for (line of lines) {
-        if (line.length >= 100) {
-            for (i of line) {
-                data[4*i] = 0;
-                data[4*i+1] = 255;
-                data[4*i+2] = 0;
-                data[4*i+3] = 127;
-            }
-        }
-    }
-
-    context.putImageData(imgData, 0, 0);
 }
