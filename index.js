@@ -1,4 +1,8 @@
-var loadingTask = pdfjsLib.getDocument('IMSLP23765-PMLP01595-Beethoven_Symphony6_Cls.pdf');
+// const filePath = 'IMSLP23765-PMLP01595-Beethoven_Symphony6_Cls.pdf';
+// const filePath = 'https://vmirror.imslp.org/files/imglnks/usimg/6/62/IMSLP23765-PMLP01595-Beethoven_Symphony6_Cls.pdf'
+// const filePath = 'https://cors-anywhere.herokuapp.com' + '/' + 'https://vmirror.imslp.org/files/imglnks/usimg/6/62/IMSLP23765-PMLP01595-Beethoven_Symphony6_Cls.pdf'
+const filePath = 'https://proxy.cors.sh/' + 'https://vmirror.imslp.org/files/imglnks/usimg/6/62/IMSLP23765-PMLP01595-Beethoven_Symphony6_Cls.pdf'
+const loadingTask = pdfjsLib.getDocument(filePath);
 loadingTask.promise.then(function(pdf) {
     const numPages = pdf.numPages;
     for (let i = 0; i < numPages; i++) {
